@@ -26,7 +26,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -64,7 +64,7 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+        super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -91,7 +91,7 @@ class TenderRequest(models.Model):
     """Zapytanie ofertowe dotyczące produktów z koszyka poprzez tabelę Produkty w zapytaniu"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     products_list = models.ManyToManyField(Product, through='ProductTenderRequest')
-    customer_message = models.CharField(max_length=250)
+    customer_message = models.CharField(max_length=250, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     answered = models.BooleanField(default=False)
 
@@ -100,7 +100,7 @@ class TenderRequest(models.Model):
         verbose_name_plural = 'zapytania'
 
 class ProductTenderRequest(models.Model):
-    """Produkty w zapytaniu np.Zapytanie id=1, o produkty z koszyka usera 1"""
+    """Produkty w zapytaniu np.Zapytanie id=1, o rodukty z koszyka usera 1"""
     tender_request = models.ForeignKey(TenderRequest, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=True)

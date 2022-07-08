@@ -36,12 +36,13 @@ class CategoryProductsView(View):
 
 class ProductDetailView(View):
     def get(self, request, product_slug):
+
         product = get_object_or_404(Product, slug=product_slug, available=True)
         categories = Category.objects.all()
         return render(request, 'product_details.html', {'categories': categories, 'product': product})
 
 
-class CartAddProductView(View):
+class CartAddProductView(LoginRequiredMixin, View):
     def post(self, request):
         quantity = request.POST.get("quantity")
         product_slug = request.POST.get("product_slug")
@@ -53,7 +54,7 @@ class CartAddProductView(View):
         return redirect('cart_details')
 
 
-class CartUpdateProductView(View):
+class CartUpdateProductView(LoginRequiredMixin, View):
     def post(self, request):
         quantity = request.POST.get("quantity")
         product_id = request.POST.get("product_id")
@@ -73,14 +74,14 @@ class CartDetailsView(LoginRequiredMixin, View):
         return render(request, 'cart_details.html', {"product_in_cart": product_in_cart})
 
 
-class CartDeleteView(SuccessMessageMixin, generic.DeleteView):
+class CartDeleteView(LoginRequiredMixin, SuccessMessageMixin, generic.DeleteView):
         model = ProductCart
         success_url = reverse_lazy('cart_details')
         template_name = 'product_cart_delete.html'
         success_message = "Usunięto"
 
 
-class SendTenderRequestView(View):
+class SendTenderRequestView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
         cart, created = Cart.objects.get_or_create(user=user)
@@ -99,7 +100,7 @@ class SendTenderRequestView(View):
         return redirect('success')
 
 
-class SuccessView(View):
+class SuccessView(LoginRequiredMixin, View):
     def get(self, request):
         message = "Zapytanie zostało wysłane"
         return render(request, 'success.html', {"message": message})
