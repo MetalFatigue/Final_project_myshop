@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Zapytanie
+{% endblock %}
+
+{% block content %}
+    <h1>Zapytanie</h1>
+    <table class="cart">
+        <thead>
+        <tr>
+            <th>Obraz</th>
+            <th>Produkt</th>
+            <th>Ilość</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pc in product_in_tender %}
+            <tr>
+                <td><a href="{% url "cart_details" %}"><img src="{% if pc.image %}{{ pc.image.url }}
+                {% else %}{% static "img/no_image.png" %}{% endif %}">
+                    </a>
+                </td>
+                <td>{{ pc.product.name }}</td>
+                <td>{{ pc.quantity }}<br>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <form method="post" >
+            {% csrf_token %}
+            <input type="text" name="customer_message" placeholder="Wiadomość do sprzedającego"><br>
+
+    <p class="text-right">
+        <button type="submit">Wyślij zapytanie</button>
+    </p>
+    </form>
+
+{% endblock %}

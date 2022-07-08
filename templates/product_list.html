@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {% if category %}{{ category.name }}{% else %}Produkty{% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <div id="sidebar">
+    <h3>Kategorie</h3>
+    <ul>
+        <li class="selected"><a href="{% url "product_list" %}">Wszystkie produkty</a></li><br>
+      {% for category in categories %}
+        <li class="selected"><a href="{% url "product_list_by_category" category.slug %}">{{ category.slug }}</a></li><br>
+      {% endfor %}
+    </ul>
+  </div>
+  <div id="main" class="product-list">
+  <h3>Wszystkie prudukty</h3>
+    {% for product in products %}
+        <div class="item">
+           <a href="{% url "product_details" product.slug %}">
+               <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+           </a>
+           <a href="{% url "product_details" product.slug %}">{{ product.name }}</a>
+        </div>
+    {% endfor %}
+  </div>
+{% endblock %}

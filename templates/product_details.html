@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ product.name }}
+{% endblock %}
+
+{% block content %}
+    <div id="sidebar">
+    <h3>Kategorie</h3>
+    <ul>
+        <li class="selected"><a href="{% url "product_list" %}">Wszystkie produkty</a></li><br>
+      {% for category in categories %}
+        <li class="selected"><a href="{% url "product_list_by_category" category.slug %}">{{ category.slug }}</a></li><br>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="product-detail">
+    <img src="{% if product.image %}{{ product.image.url }}{% else %}
+    {% static "img/no_image.png" %}{% endif %}">
+    <h1>{{ product.name }}</h1>
+    <h2>
+      <a href="{% url 'product_details' product.slug %}">
+        {{ product.category }}
+      </a>
+    </h2>
+    {{ product.description|linebreaks }}
+    <p></p>
+    {% if user.is_authenticated %}
+    <div class="cart">
+        <form method="post" action="{%  url "cart_add" %}">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="quantity" placeholder="Podaj ilość">
+            <input type="hidden" name="product_slug" value="{{ product.slug }}">
+            <p></p>
+                <button class="button" type="submit">Dodaj do zapytania</button>
+        </form>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

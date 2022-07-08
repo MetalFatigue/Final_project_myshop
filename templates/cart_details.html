@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Przedmioty zapytania ofertowego
+{% endblock %}
+
+{% block content %}
+  <h1>Przedmioty zapytania ofertowego</h1>
+  <table class="cart">
+    <thead>
+      <tr>
+        <th>Obraz</th>
+        <th>Produkt</th>
+        <th>Ilość</th>
+        <th>Usuń</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pc in product_in_cart %}
+
+          <tr>
+            <td>
+              <a href="{% url "cart_details" %}">
+                <img src="{% if pc.image %}{{ pc.image.url }}
+                {% else %}{% static "img/no_image.png" %}{% endif %}">
+              </a>
+            </td>
+            <td>{{ pc.product.name }}</td>
+            <td>{{ pc.quantity }}<br>
+          <form method="post" action="{%  url "cart_update" %}">
+            {% csrf_token %}
+            <input type="number" name="quantity" placeholder="Podaj ilość"><br>
+            <input type="hidden" name="product_id" value="{{ pc.product.id }}"><br>
+            <button class="button" type="submit">Zmień ilość</button>
+          </form>
+            </td>
+            <td><a class="button" href="{% url 'product_cart_delete' pc.id %}">Usuń</a></td>
+            </tr>
+
+      {% endfor %}
+      </tbody>
+  </table>
+  <p class="text-right">
+    <a href="{% url "product_list" %}" class="button">Kontynuuj Zakupy</a>
+    <a href="{% url "send_tender_request" %}" class="button">Wyświetl zapytanie</a>
+  </p>
+{% endblock %}

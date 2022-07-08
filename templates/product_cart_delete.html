@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Czy chcesz usunąć produkt z zapytania ? {{ product.get_name }}</h3>
+    <p></p>
+    <form method="POST" name="myForm">
+    {% csrf_token %}
+        <a class="button" onClick="document.myForm.submit();return false">TAK</a>
+        <a class="button" href="{%  url "cart_details" %}">NIE</a>
+    </form>
+    <p></p>
+{% endblock %}

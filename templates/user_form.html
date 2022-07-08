@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+<form method="post">
+<div class="container-sm">
+    {% csrf_token %}
+    {% crispy form %}
+    <div>
+      <button type="submit" class="btn btn-success">Zatwierdź</button>
+    </div>
+</div>
+</form>
+{% endblock %}

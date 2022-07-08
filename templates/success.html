@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Zapytanie
+{% endblock %}
+
+{% block content %}
+   <div>
+        <p></p>
+            <h3>
+                {{ message }}
+            </h3>
+        <p></p>
+        <a class="button" href="{% url 'product_list' %}">Powrót do sklepu</a>
+        <p></p>
+    </div>
+{% endblock %}
+
