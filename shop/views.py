@@ -8,18 +8,21 @@ from shop.models import Profil, Category, Product, Cart, ProductCart, TenderRequ
 
 
 class SignUpView(SuccessMessageMixin, generic.CreateView):
+    """Widok rejestracji użytkownika"""
     template_name = 'user_form.html'
     form_class = forms.UserForm
     success_message = "Dodano użytkownika"
     success_url = reverse_lazy('product_list')
 
     def form_valid(self, form):
+        """Funkcja rozszerza User o dodatkowy atrybut company"""
         response = super().form_valid(form)
         profil = Profil.objects.create(company=form.cleaned_data['company'], user=self.object)
         return response
 
 
 class AllProductsView(View):
+    """Widok wszystkich produktów"""
     def get(self, request):
         categories = Category.objects.all()
         products = Product.objects.all()
@@ -27,6 +30,7 @@ class AllProductsView(View):
 
 
 class CategoryProductsView(View):
+    """Widok wszystkich produktów w podanej kategorii"""
     def get(self, request, category_slug):
         category = Category.objects.get(slug=category_slug)
         products = Product.objects.filter(available=True, category=category)
@@ -35,18 +39,19 @@ class CategoryProductsView(View):
 
 
 class ProductDetailView(View):
+    """Widok szczegółów Produktu"""
     def get(self, request, product_slug):
-
         product = get_object_or_404(Product, slug=product_slug, available=True)
         categories = Category.objects.all()
         return render(request, 'product_details.html', {'categories': categories, 'product': product})
 
 
 class CartAddProductView(LoginRequiredMixin, View):
+    """Widok dodawania produktu do koszyka"""
     def post(self, request):
         quantity = request.POST.get("quantity")
         product_slug = request.POST.get("product_slug")
-        product = Product.objects.get(slug=product_slug)
+        product = Product.objects.get(slug=product_slug, available=True)
         cart, created = Cart.objects.get_or_create(user=request.user)
         pc,created = ProductCart.objects.get_or_create(cart=cart, product=product)
         pc.quantity = quantity
@@ -55,10 +60,11 @@ class CartAddProductView(LoginRequiredMixin, View):
 
 
 class CartUpdateProductView(LoginRequiredMixin, View):
+    """Widok zmiana ilości produktów w koszyku"""
     def post(self, request):
         quantity = request.POST.get("quantity")
         product_id = request.POST.get("product_id")
-        product = Product.objects.get(id=product_id)
+        product = Product.objects.get(id=product_id, available=True)
         cart, created = Cart.objects.get_or_create(user=request.user)
         pc = ProductCart.objects.get(cart=cart, product=product)
         pc.quantity = quantity
@@ -67,6 +73,7 @@ class CartUpdateProductView(LoginRequiredMixin, View):
 
 
 class CartDetailsView(LoginRequiredMixin, View):
+    """Widok szczegóły koszyka"""
     def get(self, request):
         user = request.user
         cart, created = Cart.objects.get_or_create(user=user)
@@ -75,13 +82,15 @@ class CartDetailsView(LoginRequiredMixin, View):
 
 
 class CartDeleteView(LoginRequiredMixin, SuccessMessageMixin, generic.DeleteView):
-        model = ProductCart
-        success_url = reverse_lazy('cart_details')
-        template_name = 'product_cart_delete.html'
-        success_message = "Usunięto"
+    """Widok usuwania produktu z koszyka"""
+    model = ProductCart
+    success_url = reverse_lazy('cart_details')
+    template_name = 'product_cart_delete.html'
+    success_message = "Usunięto"
 
 
 class SendTenderRequestView(LoginRequiredMixin, View):
+    """Widok po wejściu metodą get wyświetla wszystkie produkty w zapytaniu"""
     def get(self, request):
         user = request.user
         cart, created = Cart.objects.get_or_create(user=user)
@@ -89,6 +98,7 @@ class SendTenderRequestView(LoginRequiredMixin, View):
         return render(request, 'tender_details.html', {"product_in_tender": product_in_tender})
 
     def post(self, request):
+        """Widok po wejściu metodą post zapisuje zapytanie, opcjonalnie można napisać wiadomość do sprzedającego"""
         user = request.user
         cart = Cart.objects.get(user=user)
         product_list = ProductCart.objects.filter(cart=cart)
@@ -101,6 +111,7 @@ class SendTenderRequestView(LoginRequiredMixin, View):
 
 
 class SuccessView(LoginRequiredMixin, View):
+    """Widok potwierdza zapisanie zapytania"""
     def get(self, request):
         message = "Zapytanie zostało wysłane"
         return render(request, 'success.html', {"message": message})
