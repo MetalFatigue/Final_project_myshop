@@ -1,5 +1,5 @@
 from django.contrib import admin
-from shop.models import Profil, Category, Type, Product, TenderRequest
+from shop.models import Profil, Category, Type, Product, TenderRequest, ProductTenderRequest
 
 
 @admin.register(Category)
@@ -20,3 +20,4 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TenderRequest)
+admin.site.register(ProductTenderRequest)

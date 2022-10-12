@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views import generic, View
 from shop import forms
 from shop.models import Profil, Category, Product, Cart, ProductCart, TenderRequest, ProductTenderRequest
+from django.core.mail import send_mail
 
 
 class SignUpView(SuccessMessageMixin, generic.CreateView):
@@ -106,6 +107,10 @@ class SendTenderRequestView(LoginRequiredMixin, View):
         tender_request = TenderRequest.objects.create(user=user, customer_message=customer_message)
         for pc in product_list:
             ProductTenderRequest.objects.create(tender_request=tender_request, product=pc.product, quantity=pc.quantity)
+        subject = f"Zamówienie nr: {tender_request.id}"
+        body = ', '.join([ProductCart.product.name  for ProductCart in product_list])
+        email = request.user.email
+        send_mail(subject, body ,'django.core.mail.test@gmail.com', [email])
 
         return redirect('success')
 

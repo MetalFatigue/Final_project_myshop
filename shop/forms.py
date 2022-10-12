@@ -12,19 +12,19 @@ class UserForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
 
 
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = models.Category
-        fields = ['name']
-
-
-class TypeForm(forms.ModelForm):
-    class Meta:
-        model = models.Type
-        fields = ['name']
-
-
-class Product(forms.ModelForm):
-    class Meta:
-        model = models.Product
-        fields = '__all__'
+# class CategoryForm(forms.ModelForm):
+#     class Meta:
+#         model = models.Category
+#         fields = ['name']
+#
+#
+# class TypeForm(forms.ModelForm):
+#     class Meta:
+#         model = models.Type
+#         fields = ['name']
+#
+#
+# class Product(forms.ModelForm):
+#     class Meta:
+#         model = models.Product
+#         fields = '__all__'

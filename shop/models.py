@@ -81,14 +81,14 @@ class Cart(models.Model):
 
 
 class ProductCart(models.Model):
-    """Produkty w koszyku np. Produkty w koszyku usera 1"""
+    """Produkty w koszyku"""
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=True)
 
 
 class TenderRequest(models.Model):
-    """Zapytanie ofertowe dotyczące produktów z koszyka poprzez tabelę Produkty w zapytaniu"""
+    """Zapytanie ofertowe"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     products_list = models.ManyToManyField(Product, through='ProductTenderRequest')
     customer_message = models.CharField(max_length=250, null=True, blank=True)
@@ -100,10 +100,14 @@ class TenderRequest(models.Model):
         verbose_name_plural = 'zapytania'
 
 class ProductTenderRequest(models.Model):
-    """Produkty w zapytaniu np.Zapytanie id=1, o rodukty z koszyka usera 1"""
+    """Produkty w zapytaniu"""
     tender_request = models.ForeignKey(TenderRequest, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name = 'produkty z zapytania'
+        verbose_name_plural = 'produkty z zapytania'
 
 
 # class EmailTenderRequest(models.Model):
